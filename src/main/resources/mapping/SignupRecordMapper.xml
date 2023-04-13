@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.as.signup.mapper.SignupRecordMapper">
+  <resultMap id="BaseResultMap" type="com.as.signup.entity.SignupRecord">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="classes_id" jdbcType="INTEGER" property="classesId" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="organization" jdbcType="VARCHAR" property="organization" />
+    <result column="post" jdbcType="VARCHAR" property="post" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="files" jdbcType="VARCHAR" property="files" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, classes_id, mobile, name, organization, post, area, email, files, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_signup_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_signup_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.as.signup.entity.SignupRecord">
+    insert into t_signup_record (id, classes_id, mobile,
+      name, organization, post,
+      area, email, files,
+      create_time)
+    values (#{id,jdbcType=INTEGER}, #{classesId,jdbcType=INTEGER}, #{mobile,jdbcType=VARCHAR},
+      #{name,jdbcType=VARCHAR}, #{organization,jdbcType=VARCHAR}, #{post,jdbcType=VARCHAR},
+      #{area,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{files,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.as.signup.entity.SignupRecord">
+    insert into t_signup_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="classesId != null">
+        classes_id,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="organization != null">
+        organization,
+      </if>
+      <if test="post != null">
+        post,
+      </if>
+      <if test="area != null">
+        area,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="files != null">
+        files,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="classesId != null">
+        #{classesId,jdbcType=INTEGER},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="organization != null">
+        #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="post != null">
+        #{post,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null">
+        #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.as.signup.entity.SignupRecord">
+    update t_signup_record
+    <set>
+      <if test="classesId != null">
+        classes_id = #{classesId,jdbcType=INTEGER},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="organization != null">
+        organization = #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="post != null">
+        post = #{post,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null">
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="files != null">
+        files = #{files,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.as.signup.entity.SignupRecord">
+    update t_signup_record
+    set classes_id = #{classesId,jdbcType=INTEGER},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      organization = #{organization,jdbcType=VARCHAR},
+      post = #{post,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      files = #{files,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByMobile" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_signup_record where mobile = #{mobile,jdbcType=VARCHAR} order by classes_id
+  </select>
+  <select id="selectByMobileAndClasses" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_signup_record where mobile = #{mobile,jdbcType=VARCHAR} and classes_id = #{classesId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_signup_record order by classes_id
+  </select>
+  <select id="selectByClassesId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from t_signup_record where classes_id = #{classesId,jdbcType=INTEGER} order by create_time
+  </select>
+</mapper>

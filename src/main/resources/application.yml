@@ -1,0 +1,32 @@
+server:
+  port: 10086
+spring:
+  profiles:
+    active: dev
+  application:
+    name: signup-app
+  datasource:
+    url: jdbc:mysql://121.37.10.43:3306/signup?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: myx_+123456
+    type: com.alibaba.druid.pool.DruidDataSource
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+mybatis:
+  mapper-locations: classpath:/mapping/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+file-system:
+  upload-path: /signup/files
+  outer-prefix: https://ac-sfs.obs.cn-south-1.myhuaweicloud.com
+
+logging:
+  file:
+    path: /root/signup/logs
+  level:
+    root: info
