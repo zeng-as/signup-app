@@ -21,6 +21,8 @@ public interface ClassesMapper {
 
     List<Classes> selectAll();
 
+    List<Classes> selectPeriod(Integer period);
+
     List<Classes> selectForUpdate(List<Integer> classesIds);
 
     void addSignupMember(Integer id);

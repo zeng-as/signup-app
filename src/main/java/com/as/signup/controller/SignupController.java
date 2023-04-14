@@ -38,6 +38,12 @@ public class SignupController {
         return R.ok(signupService.getAllClasses());
     }
 
+    @ApiOperation(value = "获取有效课程信息")
+    @GetMapping("/getValidClasses/{period}")
+    public R<List<Classes>> getValidClasses(@PathVariable Integer period) {
+        return R.ok(signupService.getValidClasses(period));
+    }
+
     @ApiOperation(value = "影像上传")
     @PostMapping("/fileUpload")
     public R<File> fileUpload(@RequestPart("files[]") MultipartFile[] files) {

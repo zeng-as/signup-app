@@ -12,6 +12,8 @@ public class Classes {
 
     private Integer id;
 
+    private Integer period;
+
     private String name;
 
     private Date signupStart;

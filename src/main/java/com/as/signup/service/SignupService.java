@@ -47,6 +47,15 @@ public class SignupService {
         return classesMapper.selectAll();
     }
 
+    public List<Classes> getValidClasses(Integer period) {
+        List<Classes> classes = classesMapper.selectPeriod(period);
+        if (period == 6) {
+            final int max = 27;
+            classes.removeIf(c -> c.getCurrentNum() >= max);
+        }
+        return classes;
+    }
+
     /**
      * 根据id获取课程信息
      */
@@ -123,7 +132,7 @@ public class SignupService {
     public XSSFWorkbook export(Integer classesId) {
         List<Integer> classesIds;
         if (classesId == 0) {
-            classesIds = Arrays.asList(2,3,4,5);
+            classesIds = Arrays.asList(7,8,9,10,11);
         } else {
             classesIds = Collections.singletonList(classesId);
         }
@@ -131,16 +140,18 @@ public class SignupService {
         XSSFWorkbook workbook = new XSSFWorkbook();
         for (Integer id : classesIds) {
             List<SignupRecord> signupRecords = signupRecordMapper.selectByClassesId(id);
-            createSheet(workbook, id, transRows(signupRecords));
+            Classes classes = classesMapper.selectByPrimaryKey(id);
+            createSheet(workbook, classes.getName(), transRows(signupRecords, classes));
         }
 
         return workbook;
     }
 
-    private List<JSONObject> transRows(List<SignupRecord> signupRecords) {
+    private List<JSONObject> transRows(List<SignupRecord> signupRecords, Classes classes) {
         List<JSONObject> rs = new ArrayList<>();
         for (SignupRecord signupRecord : signupRecords) {
             JSONObject jsonObject = JSONObject.parseObject(JSONObject.toJSONString(signupRecord));
+            jsonObject.put("className", classes.getName());
 
             // jsonType
             String files = signupRecord.getFiles();
@@ -172,9 +183,9 @@ public class SignupService {
         return rs;
     }
 
-    private void createSheet(XSSFWorkbook workbook, Integer classesId, List<JSONObject> signupRecords) {
+    private void createSheet(XSSFWorkbook workbook, String sheetName, List<JSONObject> signupRecords) {
         CreationHelper helper = workbook.getCreationHelper();
-        XSSFSheet sheet = workbook.createSheet("第" + classesId + "期");
+        XSSFSheet sheet = workbook.createSheet(sheetName);
 
         Drawing<XSSFShape> drawing = sheet.createDrawingPatriarch();
         // 设置头
@@ -222,6 +233,6 @@ public class SignupService {
     }
 
     private static final String[] headerName = {"期数", "手机号码", "姓名", "单位", "职称", "所在地", "邮箱", "创建时间", "凭证类型", "凭证"};
-    private static final String[] headerKey = {"classesId", "mobile", "name", "organization", "post", "area", "email", "createTime", "fileType", "files"};
+    private static final String[] headerKey = {"className", "mobile", "name", "organization", "post", "area", "email", "createTime", "fileType", "files"};
 
 }
