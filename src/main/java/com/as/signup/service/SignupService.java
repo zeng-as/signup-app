@@ -48,12 +48,7 @@ public class SignupService {
     }
 
     public List<Classes> getValidClasses(Integer period) {
-        List<Classes> classes = classesMapper.selectPeriod(period);
-        if (period == 6) {
-            final int max = 27;
-            classes.removeIf(c -> c.getCurrentNum() >= max);
-        }
-        return classes;
+        return classesMapper.selectPeriod(period);
     }
 
     /**
