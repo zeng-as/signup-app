@@ -152,7 +152,7 @@
   <select id="selectByMobile" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
-    from t_signup_record where mobile = #{mobile,jdbcType=VARCHAR} order by classes_id
+    from t_signup_record where mobile = #{mobile,jdbcType=VARCHAR}  order by classes_id
   </select>
   <select id="selectByMobileAndClasses" resultMap="BaseResultMap">
     select

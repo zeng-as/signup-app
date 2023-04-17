@@ -22,6 +22,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.*;
 
+import static com.as.signup.common.CommonConstants.CURRENT_PERIOD;
+
 @RestController
 @Api(tags = "报名接口")
 public class SignupController {
@@ -96,7 +98,10 @@ public class SignupController {
         List<SignupRecord> records = signupService.getSignupRecordByMobile(record.getMobile());
         List<Classes> rs = new ArrayList<>();
         for (SignupRecord signupRecord : records) {
-            rs.add(signupService.getClassesById(signupRecord.getClassesId()));
+            Classes classes = signupService.getClassesById(signupRecord.getClassesId());
+            if (classes.getPeriod() == CURRENT_PERIOD) {
+                rs.add(classes);
+            }
         }
         return R.ok(rs);
     }
