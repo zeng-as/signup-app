@@ -99,7 +99,7 @@ public class SignupController {
         List<Classes> rs = new ArrayList<>();
         for (SignupRecord signupRecord : records) {
             Classes classes = signupService.getClassesById(signupRecord.getClassesId());
-            if (classes.getPeriod() == CURRENT_PERIOD) {
+            if (Math.abs(classes.getPeriod()) == CURRENT_PERIOD) {
                 rs.add(classes);
             }
         }
@@ -107,9 +107,9 @@ public class SignupController {
     }
 
     @ApiOperation(value = "导出")
-    @GetMapping("/export/{classesId}")
-    public void export(@PathVariable(name = "classesId") Integer classesId, HttpServletResponse response) {
-        final XSSFWorkbook workbook = signupService.export(classesId);
+    @GetMapping("/export/{period}")
+    public void export(@PathVariable(name = "period") Integer period, HttpServletResponse response) {
+        final XSSFWorkbook workbook = signupService.export(period);
         try (final OutputStream os = response.getOutputStream()) {
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");
             response.setHeader("Content-Disposition", "attachment;filename=export_data.xls");

@@ -14,9 +14,7 @@ import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
-import org.apache.poi.ss.usermodel.Picture;
 import org.apache.poi.xssf.usermodel.*;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -126,18 +124,12 @@ public class SignupService {
         }
     }
 
-    public XSSFWorkbook export(Integer classesId) {
-        List<Integer> classesIds;
-        if (classesId == 0) {
-            classesIds = Arrays.asList(7,8,9,10,11);
-        } else {
-            classesIds = Collections.singletonList(classesId);
-        }
+    public XSSFWorkbook export(Integer period) {
+        List<Classes> classesList = classesMapper.selectPeriod(period);
 
         XSSFWorkbook workbook = new XSSFWorkbook();
-        for (Integer id : classesIds) {
-            List<SignupRecord> signupRecords = signupRecordMapper.selectByClassesId(id);
-            Classes classes = classesMapper.selectByPrimaryKey(id);
+        for (Classes classes : classesList) {
+            List<SignupRecord> signupRecords = signupRecordMapper.selectByClassesId(classes.getId());
             createSheet(workbook, classes.getName(), transRows(signupRecords, classes));
         }
 
