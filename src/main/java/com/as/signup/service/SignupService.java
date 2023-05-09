@@ -23,6 +23,8 @@ import org.springframework.util.CollectionUtils;
 import java.io.FileInputStream;
 import java.util.*;
 
+import static com.as.signup.common.CommonConstants.CURRENT_ONLINE_PERIOD;
+
 @Service
 public class SignupService {
 
@@ -37,6 +39,9 @@ public class SignupService {
 
     @Autowired
     private FileSystemProperties fileSystemProperties;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取所有课程信息
@@ -122,6 +127,11 @@ public class SignupService {
             signupRecordMapper.insertSelective(signupDTO);
             classesMapper.addSignupMember(clazz.getId());
         }
+
+        // 线上课程，生成账号
+        if (classes.get(0).getPeriod() == CURRENT_ONLINE_PERIOD) {
+            userService.register(signupDTO.getMobile());
+        }
     }
 
     public XSSFWorkbook export(Integer period) {
@@ -159,8 +169,8 @@ public class SignupService {
 
             String[] fileStrArray = filesStr.split(",");
             List<String> paths = new ArrayList<>();
-            for (int i = 0; i < fileStrArray.length; i++) {
-                File file = fileMapper.selectByPrimaryKey(Integer.parseInt(fileStrArray[i]));
+            for (String s : fileStrArray) {
+                File file = fileMapper.selectByPrimaryKey(Integer.parseInt(s));
                 String url = file.getUrl();
                 String path = url.replaceAll(fileSystemProperties.getOuterPrefix(), "");
                 paths.add(path);
@@ -224,4 +234,27 @@ public class SignupService {
     private static final String[] headerName = {"期数", "手机号码", "姓名", "单位", "职称", "所在地", "邮箱", "创建时间", "凭证类型", "凭证"};
     private static final String[] headerKey = {"className", "mobile", "name", "organization", "post", "area", "email", "createTime", "fileType", "files"};
 
+    public List<Classes> getSignupClasses(String mobile, Integer period) {
+        List<Classes> rs = new ArrayList<>();
+        List<Classes> classes = classesMapper.selectPeriod(period);
+        Date now = new Date();
+        for (Classes cs : classes) {
+            Date videoValidStart = cs.getVideoValidStart();
+            Date videoValidEnd = cs.getVideoValidEnd();
+            if (null == videoValidStart || videoValidStart.after(now)) {
+                continue;
+            }
+
+            if (null == videoValidEnd || videoValidEnd.before(now)) {
+                continue;
+            }
+
+            List<SignupRecord> signupRecords = signupRecordMapper.selectByMobileAndClasses(mobile, cs.getId());
+            if (!CollectionUtils.isEmpty(signupRecords)) {
+                rs.add(cs);
+            }
+        }
+
+        return rs;
+    }
 }

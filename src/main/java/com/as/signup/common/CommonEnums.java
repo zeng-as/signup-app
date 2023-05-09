@@ -3,6 +3,8 @@ package com.as.signup.common;
 public final class CommonEnums {
     public static enum ResCode {
         OK("200", "请求成功"),
+        LOGIN_FAIL("2001", "用户名或密码错误"),
+        PWD_ERROR("2002", "密码校验不通过"),
         EX_PARAM("1001", "参数不完整"),
         EX_UPLOAD("1002", "文件上传失败"),
         EX_SIGNUP("1003", "报名失败"),

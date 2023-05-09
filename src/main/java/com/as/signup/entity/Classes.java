@@ -1,9 +1,9 @@
 package com.as.signup.entity;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 import lombok.ToString;
 
-import javax.annotation.Generated;
 import java.util.Date;
 
 @Data
@@ -29,5 +29,13 @@ public class Classes {
     private Date createTime;
 
     private Date updateTime;
+
+    private String video;
+
+    @JSONField(format = "yyyy-MM-dd")
+    private Date videoValidStart;
+
+    @JSONField(format = "yyyy-MM-dd")
+    private Date videoValidEnd;
 
 }

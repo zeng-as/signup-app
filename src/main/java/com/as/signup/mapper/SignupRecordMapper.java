@@ -27,4 +27,6 @@ public interface SignupRecordMapper {
     List<SignupRecord> selectAll();
 
     List<SignupRecord> selectByClassesId(Integer classesId);
+
+    List<String> selectMobilesByPeriod(Integer period);
 }

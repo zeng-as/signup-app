@@ -18,7 +18,13 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-
+  redis:
+    database: 5
+    # Redis服务器地址
+    host: 139.9.206.60
+    # Redis服务器连接端口
+    port: 6379
+    password: Rr123456
 
 mybatis:
   mapper-locations: classpath:/mapping/*.xml

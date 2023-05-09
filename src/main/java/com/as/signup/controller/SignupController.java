@@ -22,6 +22,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.*;
 
+import static com.as.signup.common.CommonConstants.CURRENT_ONLINE_PERIOD;
 import static com.as.signup.common.CommonConstants.CURRENT_PERIOD;
 
 @RestController
@@ -99,7 +100,7 @@ public class SignupController {
         List<Classes> rs = new ArrayList<>();
         for (SignupRecord signupRecord : records) {
             Classes classes = signupService.getClassesById(signupRecord.getClassesId());
-            if (Math.abs(classes.getPeriod()) == CURRENT_PERIOD) {
+            if (classes.getPeriod() == CURRENT_PERIOD || classes.getPeriod() == CURRENT_ONLINE_PERIOD) {
                 rs.add(classes);
             }
         }

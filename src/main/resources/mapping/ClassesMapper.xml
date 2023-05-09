@@ -12,10 +12,13 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="period" jdbcType="INTEGER" property="period" />
+    <result column="video" jdbcType="VARCHAR" property="video" />
+    <result column="video_valid_start" jdbcType="TIMESTAMP" property="videoValidStart" />
+    <result column="video_valid_end" jdbcType="TIMESTAMP" property="videoValidEnd" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, signup_start, signup_endtime, max_num, current_num, wx_qrcode, create_time, 
-    update_time,period
+    update_time, period, video, video_valid_start, video_valid_end
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -30,13 +33,14 @@
   <insert id="insert" parameterType="com.as.signup.entity.Classes">
     insert into t_classes (id, name, signup_start, 
       signup_endtime, max_num, current_num, 
-      wx_qrcode, create_time, update_time, period
-      )
+      wx_qrcode, create_time, update_time, 
+      period, video, video_valid_start, 
+      video_valid_end)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{signupStart,jdbcType=TIMESTAMP}, 
       #{signupEndtime,jdbcType=TIMESTAMP}, #{maxNum,jdbcType=INTEGER}, #{currentNum,jdbcType=INTEGER}, 
-      #{wxQrcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
-      #{period,jdbcType=INTEGER}
-      )
+      #{wxQrcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{period,jdbcType=INTEGER}, #{video,jdbcType=VARCHAR}, #{videoValidStart,jdbcType=TIMESTAMP}, 
+      #{videoValidEnd,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.as.signup.entity.Classes">
     insert into t_classes
@@ -71,6 +75,15 @@
       <if test="period != null">
         period,
       </if>
+      <if test="video != null">
+        video,
+      </if>
+      <if test="videoValidStart != null">
+        video_valid_start,
+      </if>
+      <if test="videoValidEnd != null">
+        video_valid_end,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -102,6 +115,15 @@
       </if>
       <if test="period != null">
         #{period,jdbcType=INTEGER},
+      </if>
+      <if test="video != null">
+        #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="videoValidStart != null">
+        #{videoValidStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="videoValidEnd != null">
+        #{videoValidEnd,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -135,6 +157,15 @@
       <if test="period != null">
         period = #{period,jdbcType=INTEGER},
       </if>
+      <if test="video != null">
+        video = #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="videoValidStart != null">
+        video_valid_start = #{videoValidStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="videoValidEnd != null">
+        video_valid_end = #{videoValidEnd,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -148,24 +179,27 @@
       wx_qrcode = #{wxQrcode,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
-      period = #{period,jdbcType=INTEGER}
+      period = #{period,jdbcType=INTEGER},
+      video = #{video,jdbcType=VARCHAR},
+      video_valid_start = #{videoValidStart,jdbcType=TIMESTAMP},
+      video_valid_end = #{videoValidEnd,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectAll" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from t_classes
   </select>
-  <select id="selectPeriod" resultMap="BaseResultMap" parameterType="int">
+  <select id="selectPeriod" parameterType="int" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from t_classes where period = #{period,jdbcType=INTEGER}
   </select>
   <select id="selectForUpdate" parameterType="java.util.List" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List"/>
+    <include refid="Base_Column_List" />
     from t_classes where id in
-    <foreach collection="classesIds" open="(" close=")" separator="," item="classesId">
+    <foreach close=")" collection="classesIds" item="classesId" open="(" separator=",">
       #{classesId}
     </foreach>
     for update
