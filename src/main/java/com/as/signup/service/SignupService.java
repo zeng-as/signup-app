@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.util.*;
 
 import static com.as.signup.common.CommonConstants.CURRENT_ONLINE_PERIOD;
+import static com.as.signup.common.CommonConstants.CURRENT_PERIOD;
 
 @Service
 public class SignupService {
@@ -128,8 +129,8 @@ public class SignupService {
             classesMapper.addSignupMember(clazz.getId());
         }
 
-        // 线上课程，生成账号
-        if (classes.get(0).getPeriod() == CURRENT_ONLINE_PERIOD) {
+        // 线下课程，生成账号
+        if (classes.get(0).getPeriod() == CURRENT_PERIOD) {
             userService.register(signupDTO.getMobile());
         }
     }
