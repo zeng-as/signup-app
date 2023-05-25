@@ -16,8 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static com.as.signup.common.CommonConstants.CURRENT_ONLINE_PERIOD;
-import static com.as.signup.common.CommonConstants.TOKEN_REDIS_KEY;
+import static com.as.signup.common.CommonConstants.*;
 import static com.as.signup.common.CommonEnums.ResCode.PWD_ERROR;
 
 @RestController
@@ -36,7 +35,7 @@ public class UserController {
     @GetMapping("/getSignupClasses")
     public R<List<Classes>> getSignupClasses() {
         String mobile = UserThreadLocal.currentUser.get();
-        return R.ok(signupService.getSignupClasses(mobile, CURRENT_ONLINE_PERIOD));
+        return R.ok(signupService.getSignupClasses(mobile, CURRENT_PERIOD));
     }
 
     @PostMapping("/register/{userName}")
@@ -54,6 +53,12 @@ public class UserController {
     @PostMapping("/initOnlineUsers")
     public R<?> initOnlineUsers() {
         userService.initUsers(CURRENT_ONLINE_PERIOD);
+        return R.ok();
+    }
+
+    @PostMapping("/initOfflineUsers")
+    public R<?> initOfflineUsers() {
+        userService.initUsers(CURRENT_PERIOD);
         return R.ok();
     }
 
