@@ -35,7 +35,9 @@ public class UserController {
     @GetMapping("/getSignupClasses")
     public R<List<Classes>> getSignupClasses() {
         String mobile = UserThreadLocal.currentUser.get();
-        return R.ok(signupService.getSignupClasses(mobile, CURRENT_PERIOD));
+        List<Classes> signupClasses = signupService.getSignupClasses(mobile, CURRENT_PERIOD);
+        signupClasses.addAll(signupService.getSignupClasses(mobile, CURRENT_ONLINE_PERIOD));
+        return R.ok(signupClasses);
     }
 
     @PostMapping("/register/{userName}")

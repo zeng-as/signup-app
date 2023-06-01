@@ -130,9 +130,7 @@ public class SignupService {
         }
 
         // 线下课程，生成账号
-        if (classes.get(0).getPeriod() == CURRENT_PERIOD) {
-            userService.register(signupDTO.getMobile());
-        }
+        userService.register(signupDTO.getMobile());
     }
 
     public XSSFWorkbook export(Integer period) {
