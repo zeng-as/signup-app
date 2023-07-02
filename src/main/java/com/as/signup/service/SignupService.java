@@ -23,9 +23,6 @@ import org.springframework.util.CollectionUtils;
 import java.io.FileInputStream;
 import java.util.*;
 
-import static com.as.signup.common.CommonConstants.CURRENT_ONLINE_PERIOD;
-import static com.as.signup.common.CommonConstants.CURRENT_PERIOD;
-
 @Service
 public class SignupService {
 
@@ -249,7 +246,21 @@ public class SignupService {
             }
 
             List<SignupRecord> signupRecords = signupRecordMapper.selectByMobileAndClasses(mobile, cs.getId());
-            if (!CollectionUtils.isEmpty(signupRecords)) {
+            if (CollectionUtils.isEmpty(signupRecords)) {
+                continue;
+            }
+
+            String video = cs.getVideo();
+            if (video.contains(",")) {
+                String[] split = video.split(",");
+                for (int i = 0; i < split.length; i++) {
+                    String s = split[i].replaceAll(" ", "");
+                    Classes n = JSONObject.parseObject(JSONObject.toJSONString(cs), Classes.class);
+                    n.setName(n.getName() + "(" + (i + 1) + ")");
+                    n.setVideo(s);
+                    rs.add(n);
+                }
+            } else {
                 rs.add(cs);
             }
         }
