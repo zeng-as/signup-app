@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.as.signup.common.CommonConstants.*;
-import static com.as.signup.common.CommonEnums.ResCode.PWD_ERROR;
 
 @RestController
 @RequestMapping("/user")
@@ -36,7 +38,13 @@ public class UserController {
     public R<List<Classes>> getSignupClasses() {
         String mobile = UserThreadLocal.currentUser.get();
         List<Classes> signupClasses = signupService.getSignupClasses(mobile, CURRENT_PERIOD);
-        signupClasses.addAll(signupService.getSignupClasses(mobile, CURRENT_ONLINE_PERIOD));
+        Map<Integer, Classes> collect = signupClasses.stream().collect(Collectors.toMap(Classes::getId, Function.identity(), (c1, c2) -> c2));
+        List<Classes> signupClassesOnline = signupService.getSignupClasses(mobile, CURRENT_ONLINE_PERIOD);
+        for (Classes classes : signupClassesOnline) {
+            if (!collect.containsKey(classes.getId())) {
+                signupClasses.add(classes);
+            }
+        }
         return R.ok(signupClasses);
     }
 
